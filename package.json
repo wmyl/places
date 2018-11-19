@@ -1,0 +1,25 @@
+{
+  "name": "places",
+  "version": "1.0.0",
+  "description": "Interactive map based on Google Maps. Each place can have a popup with information, along with other features such as in-view list and clustering.",
+  "main": "places.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=./webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.wmyl.se:wmyl/places.git"
+  },
+  "author": "We Made You Look",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^1.0.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2"
+  }
+}
