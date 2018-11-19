@@ -4,14 +4,17 @@ require('es6-promise').polyfill();
 import MarkerClusterer from 'node-js-marker-clusterer';
 import 'whatwg-fetch'
 import styles from './styles';
+import { SELECTOR_CLASS } from "./index";
 
 class MapHandler {
-    constructor(mapContainer, imagePath, onMarkerClick, clusterer) {
-        this.mapWrapper = document.querySelector(mapContainer);
+    constructor(imagePath, onMarkerClick, clusterer) {
         this.markers = [];
         this.onMarkerClick = onMarkerClick;
         this.imagePath = imagePath;
         this.clusterer = clusterer;
+
+        this.buildMapWrapper();
+        this.mapWrapper = document.querySelector(`.${SELECTOR_CLASS}__container`);
     }
 
     initMap(style) {
@@ -42,6 +45,14 @@ class MapHandler {
             );
         } else {
             console.log('No geoloc enabled.');
+        }
+    }
+
+    buildMapWrapper() {
+        const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
+
+        if (mapDiv) {
+            mapDiv.insertAdjacentHTML('beforeend', `<div class=${SELECTOR_CLASS}__container></div>`);
         }
     }
 
