@@ -146,7 +146,7 @@ class MapHandler {
             position: new google.maps.LatLng(marker.item.lat, marker.item.lng),
             map: this.map,
             item: marker.item,
-            icon: {
+            icon: !this.imagePath ? null : {
                 url: `${this.imagePath}${marker.item.type ? marker.item.type : ''}.png`,
                 scaledSize: new google.maps.Size(51.2,64),
             },
@@ -165,7 +165,7 @@ class MapHandler {
                 position: new google.maps.LatLng(marker.item.lat, marker.item.lng),
                 map: this.map,
                 item: marker.item,
-                icon: {
+                icon: !this.imagePath ? null : {
                     url: `${this.imagePath}${marker.item.type ? marker.item.type : ''}.png`,
                     scaledSize: new google.maps.Size(32,40),
                 },

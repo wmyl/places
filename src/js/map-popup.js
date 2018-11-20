@@ -1,62 +1,64 @@
+import { SELECTOR_CLASS } from "./index";
+
 class MapPopup {
 
     constructor(popupOptions, mapDiv, onClose) {
-        this.sidebar = document.querySelector('.m-sidebar');
+        this.sidebar = document.querySelector(`.${SELECTOR_CLASS}-sidebar`);
         this.popupOptions = popupOptions;
-        this.buttonBarIcon = document.querySelector('.m-mobile-buttons-bar__icon--toggle');
+        this.buttonBarIcon = document.querySelector(`.${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle`);
 
         this.buildPopup(mapDiv);
 
-        this.popup = document.querySelector('.m-popup');
-        this.popupContainer = this.popup.querySelector('.m-popup__container');
-        this.popupClose = this.popup.querySelector('.m-popup__close');
+        this.popup = document.querySelector(`.${SELECTOR_CLASS}-popup`);
+        this.popupContainer = this.popup.querySelector(`.${SELECTOR_CLASS}-popup__container`);
+        this.popupClose = this.popup.querySelector(`.${SELECTOR_CLASS}-popup__close`);
         this.popupClose.addEventListener('click', () => this.closePopup(onClose));
     }
 
     closePopup(onClose) {
-        this.popup.classList.add('m-popup--close');
+        this.popup.classList.add(`${SELECTOR_CLASS}-popup--close`);
 
         if (onClose) onClose();
     }
 
     buildPopup(mapDiv) {
-        const html = '<div class="m-popup m-popup--close">' +
-            '<button class="m-popup__close">x</button>' +
-            '<div class="m-popup__container"></div>' +
+        const html = `<div class="${SELECTOR_CLASS}-popup ${SELECTOR_CLASS}-popup--close">` +
+            `<button class="${SELECTOR_CLASS}-popup__close">x</button>` +
+            `<div class="${SELECTOR_CLASS}-popup__container"></div>` +
             '</div>';
 
         mapDiv.insertAdjacentHTML('beforeend', html);
     }
 
     showPopup() {
-        if(this.popup.classList.contains('m-popup--close')) {
-            this.popup.classList.remove('m-popup--close');
+        if(this.popup.classList.contains(`${SELECTOR_CLASS}-popup--close`)) {
+            this.popup.classList.remove(`${SELECTOR_CLASS}-popup--close`);
 
             if (this.sidebar) {
-                this.sidebar.classList.add('m-sidebar--hidden');
+                this.sidebar.classList.add(`${SELECTOR_CLASS}-sidebar--hidden`);
             }
 
             if (this.buttonBarIcon) {
-                this.buttonBarIcon.classList.add('m-mobile-buttons-bar__icon--up');
+                this.buttonBarIcon.classList.add(`${SELECTOR_CLASS}-mobile-buttons-bar__icon--up`);
             }
         }
     }
 
     createPlacePopup(place) {
-        const name = (place.name) ? "<h2 class='m-popup__title'>"+place.name+"</h2>" : '';
-        const address = (place.address) ? "<p class='m-popup__address'>"+place.address+"</p>" : '';
-        const comment = (place.comment) ? "<p>"+place.comment+"</p>" : '';
-        const phone = (place.phone) ? "<a href='tel:"+place.phone+"'>"+place.phone+"</a>" : '';
-        const link = (place.link) ? "<a href='"+this.addHTTP(place.link)+"' target='_blank' rel='noreferrer nofollow'>Webbplats</a>" : '';
+        const name = (place.name) ? `<h2 class="${SELECTOR_CLASS}-popup__title">${place.name}</h2>` : '';
+        const address = (place.address) ? `<p class="${SELECTOR_CLASS}-popup__address">${place.address}</p>` : '';
+        const comment = (place.comment) ? `<p>${place.comment}</p>` : '';
+        const phone = (place.phone) ? `<a href="tel:${place.phone}">${place.phone}</a>` : '';
+        const link = (place.link) ? `<a href="${this.addHTTP(place.link)}" target="_blank" rel="noreferrer nofollow">Webbplats</a>` : '';
 
         const html =
             name +
             address +
             comment +
-            "<div class='m-popup__contact'>" +
+            `<div class="${SELECTOR_CLASS}-popup__contact">` +
             phone +
             link +
-            "</div>";
+            '</div>';
 
         this.popupContainer.innerHTML = html;
 
@@ -79,17 +81,17 @@ class MapPopup {
                 "</div>";
 
         } else {
-            const title = (place.name) ? "<h2 class='m-popup__title'>Tyvärr!</h2>" : '';
+            const title = (place.name) ? `<h2 class="${SELECTOR_CLASS}-popup__title">Tyvärr!</h2>` : '';
             const text = `<p>Vi hittar tyvärr inte några resultat på <i>"${place.name}"</i>.</p>`;
 
             const contactUs = link && textLink ? `<p><a href="${link}">${textLink}</a></p>` : '';
 
             html =
-                "<div>" +
+                '<div>' +
                 title +
                 text +
                 contactUs +
-                "</div>";
+                '</div>';
         }
 
 
