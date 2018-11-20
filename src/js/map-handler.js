@@ -189,7 +189,7 @@ class MapHandler {
                 position: new google.maps.LatLng(lat, lng),
                 map: this.map,
                 item: place,
-                icon: {
+                icon: !this.imagePath ? null : {
                     url: `${this.imagePath}${type ? type : ''}.png`,
                     scaledSize: new google.maps.Size(32,40),
                 }

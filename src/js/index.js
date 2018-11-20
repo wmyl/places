@@ -3,6 +3,9 @@ import MapSidebarHandler from './map-sidebar-handler';
 import MapSearch from './map-search';
 import MapPopup from './map-popup';
 
+/* MINIMUM STYLE FOR LIBRARY */
+import '../scss/style.scss';
+
 class Places {
 
     constructor(options) {
