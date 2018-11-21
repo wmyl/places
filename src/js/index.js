@@ -32,9 +32,7 @@ class Places {
 
             if (sidebar) {
                 this.sidebarHandler = new MapSidebarHandler(sidebar, imagePath);
-                if (sidebar.searchBar) {
-                    this.mapSearch = new MapSearch(this.goToSearchedPlace.bind(this));
-                }
+                this.mapSearch = new MapSearch(this.goToSearchedPlace.bind(this));
             }
 
             if (popup) {

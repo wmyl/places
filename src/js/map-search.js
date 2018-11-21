@@ -31,7 +31,7 @@ class MapSearch {
         this.autocomplete.setBounds(bounds);
     }
 
-    static getHTML(searchOptions) {
+    static getHTML(searchOptions = {}) {
         return `<div class="${SELECTOR_CLASS}-search-bar">` +
                     `<label for="search" class="${SELECTOR_CLASS}-visually-hidden">Sök</label>` +
                     `<input class="${SELECTOR_CLASS}-search-bar__input" id="search" placeholder="${searchOptions.placeholder ? searchOptions.placeholder : ''}" type="text" />` +
