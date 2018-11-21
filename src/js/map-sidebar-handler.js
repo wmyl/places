@@ -1,7 +1,7 @@
 import MapSearch from './map-search';
 import MobileButtonsBar from './mobile-buttons-bar';
 
-import { SELECTOR_CLASS } from "./index";
+import {isMobile, SELECTOR_CLASS} from "./index";
 
 class MapSidebarHandler {
     constructor(sidebarOptions, imagePath) {
@@ -122,7 +122,10 @@ class MapSidebarHandler {
             item.classList.add(`${SELECTOR_CLASS}-sidebar-item`);
             item.onclick = () => onclick(marker);
             item.innerHTML = `<span class="${SELECTOR_CLASS}-sidebar-item__name">${name}</span>` +
-                             `<img class="${SELECTOR_CLASS}-sidebar-item__logo " src="${this.imagePath}${marker.item.type ? marker.item.type : ''}.png" alt="${type}"/>`;
+                (this.imagePath ?
+                        `<img class="${SELECTOR_CLASS}-sidebar-item__logo " src="${this.imagePath}${marker.item.type ? marker.item.type : ''}.png" alt="${type}"/>` :
+                        `<div></div>`
+                 );
 
             resultWrapper.appendChild(item);
         });
@@ -132,7 +135,7 @@ class MapSidebarHandler {
 
     setNumberVisibleMarkers(visibleMarkers, fromSearch) {
         const content = visibleMarkers.length + ' plats' + (visibleMarkers.length !== 1 ? 'er' : '') + (fromSearch ? ' i närheten' : '');
-        if (!!this.sidebarOptions.mobileButtonsBar) {
+        if (!!this.sidebarOptions.mobileButtonsBar && isMobile()) {
             this.buttonBarResult.innerHTML = content;
         } else {
             this.sidebarNumberPlaces.innerHTML = content;
