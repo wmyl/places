@@ -1,16 +1,18 @@
 import MapSearch from './map-search';
 import MobileButtonsBar from './mobile-buttons-bar';
 
+import { SELECTOR_CLASS } from "./index";
+
 class MapSidebarHandler {
-    constructor(sidebarOptions, imagePath, mapDiv) {
+    constructor(sidebarOptions, imagePath) {
 
         this.imagePath = imagePath;
         this.sidebarOptions = sidebarOptions;
-        this.buildSidebar(sidebarOptions, mapDiv);
+        this.buildSidebar(sidebarOptions);
 
-        this.resultWrapper = document.querySelector('.m-sidebar__results');
-        this.buttonBarResult = document.querySelector('.m-mobile-buttons-bar__result');
-        this.sidebarNumberPlaces = document.querySelector('.m-sidebar__number-places');
+        this.resultWrapper = document.querySelector(`.${SELECTOR_CLASS}-sidebar__results`);
+        this.buttonBarResult = document.querySelector(`.${SELECTOR_CLASS}-mobile-buttons-bar__result`);
+        this.sidebarNumberPlaces = document.querySelector(`.${SELECTOR_CLASS}-sidebar__number-places`);
 
         if (this.resultWrapper) {
             this.resultWrapperHTML = this.resultWrapper.innerHTML;
@@ -21,39 +23,39 @@ class MapSidebarHandler {
         }
     }
 
-    buildSidebar ({ width, mobileBreakpoint, searchBar }, mapDiv) {
-        let html = '<div class="m-sidebar">';
+    buildSidebar ({ mobileBreakpoint, searchBar }) {
+        let html = `<div class="${SELECTOR_CLASS}-sidebar">`;
 
         if (searchBar) {
-            html += '<div class="m-sidebar__search">' +
+            html += `<div class="${SELECTOR_CLASS}-sidebar__search">` +
                                     MapSearch.getHTML(searchBar) +
                                 '</div>';
         }
 
         if (mobileBreakpoint) {
-            html += this.getMobileBarHTML({width, mobileBreakpoint, searchBar})
+            html += this.getMobileBarHTML({mobileBreakpoint, searchBar})
         }
 
-        html += '<div class="m-sidebar__wrapper">' +
-                                '<div class="m-sidebar__results"></div>' +
-                                '<span class="m-sidebar__number-places">0 platser</span>' +
+        html += `<div class="${SELECTOR_CLASS}-sidebar__wrapper">` +
+                                `<div class="${SELECTOR_CLASS}-sidebar__results"></div>` +
+                                `<span class="${SELECTOR_CLASS}-sidebar__number-places">0 platser</span>` +
                                 // Footer
                             '</div>' +
                         '</div>';
 
-        mapDiv.insertAdjacentHTML('beforeend', html);
+        document.querySelector(`.${SELECTOR_CLASS}`).insertAdjacentHTML('beforeend', html);
     }
 
     getMobileBarHTML(sidebarOptions) {
-        return '<div class="m-mobile-buttons-bar">' +
-                       '<span class="m-mobile-buttons-bar__result">' +
+        return `<div class="${SELECTOR_CLASS}-mobile-buttons-bar">` +
+                       `<span class="${SELECTOR_CLASS}-mobile-buttons-bar__result">` +
                            '0 platser' +
                        '</span>' +
-                       '<button class="m-mobile-buttons-bar__btn m-mobile-buttons-bar__btn--search">' +
-                            (sidebarOptions.searchBar.searchIcon ? `<img src="${sidebarOptions.searchBar.searchIcon}" class="m-search-bar__icon" alt="sök">` : '') +
+                       `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--search">` +
+                            (sidebarOptions.searchBar.searchIcon ? `<img src="${sidebarOptions.searchBar.searchIcon}" class="${SELECTOR_CLASS}-search-bar__icon" alt="sök">` : '') +
                         '</button>' +
-                       '<button class="m-mobile-buttons-bar__btn m-mobile-buttons-bar__btn--toggle">' +
-                           `<img src="${sidebarOptions.mobileListToggle}" class="m-mobile-buttons-bar__icon m-mobile-buttons-bar__icon--toggle">` +
+                       `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn m-mobile-buttons-bar__btn--toggle">` +
+                           `<img src="${sidebarOptions.mobileListToggle}" class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">` +
                        '</button>' +
                    '</div>';
     }
@@ -77,10 +79,10 @@ class MapSidebarHandler {
             } = marker.item;
 
             const item = document.createElement("BUTTON");
-            item.classList.add('m-sidebar-item');
+            item.classList.add(`${SELECTOR_CLASS}-sidebar-item`);
             item.onclick = () => onclick(marker);
-            item.innerHTML = `<span class="m-sidebar-item__name">${name}</span>` +
-                             `<img class="m-sidebar-item__logo " src="${this.imagePath}${marker.item.type ? marker.item.type : ''}.png" alt="${type}"/>`;
+            item.innerHTML = `<span class="${SELECTOR_CLASS}-sidebar-item__name">${name}</span>` +
+                             `<img class="${SELECTOR_CLASS}-sidebar-item__logo " src="${this.imagePath}${marker.item.type ? marker.item.type : ''}.png" alt="${type}"/>`;
 
             resultWrapper.appendChild(item);
         });

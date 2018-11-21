@@ -31,7 +31,7 @@ class Places {
             );
 
             if (sidebar) {
-                this.sidebarHandler = new MapSidebarHandler(sidebar, imagePath, mapDiv);
+                this.sidebarHandler = new MapSidebarHandler(sidebar, imagePath);
                 if (sidebar.searchBar) {
                     this.mapSearch = new MapSearch(this.goToSearchedPlace.bind(this));
                 }
@@ -139,7 +139,7 @@ class Places {
         const popup = this.mapPopup.createPlacePopup(marker.item);
         const height = parseFloat(window.getComputedStyle(popup).height.split('px')[0]);
         const OFFSET_Y = 60; //px
-        this.mapHandler.selectPlace(marker, (this.isMobile() || !this.sidebarHandler) ? 0 : this.options.sidebar.width, (height / 2) + OFFSET_Y);
+        this.mapHandler.selectPlace(marker, (this.isMobile() || !this.sidebarHandler) ? 0 : 300, (height / 2) + OFFSET_Y);
         this.mapPopup.showPopup();
     }
 
