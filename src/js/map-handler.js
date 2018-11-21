@@ -7,11 +7,9 @@ import styles from './styles';
 import {SELECTOR_CLASS} from "./index";
 
 class MapHandler {
-    constructor(imagePath, onMarkerClick, clusterer) {
+    constructor(imagePath) {
         this.markers = [];
-        this.onMarkerClick = onMarkerClick;
         this.imagePath = imagePath;
-        this.clusterer = clusterer;
 
         this.buildMapWrapper();
         this.mapWrapper = document.querySelector(`.${SELECTOR_CLASS}__container`);
@@ -56,7 +54,7 @@ class MapHandler {
         }
     }
 
-    setPlaces(places, offsetX, offsetY, onMarkerClick) {
+    setPlaces(places, offsetX, offsetY, onMarkerClick, clusterer) {
         this.markers = [];
 
         places.forEach((place) => {
@@ -78,24 +76,8 @@ class MapHandler {
             this.markers.push(marker);
         });
 
-        if (this.clusterer) {
-            google.maps.event.addListener(new MarkerClusterer(
-                this.map, this.markers, {
-                    styles: [...Array(5).keys()].map(e => this.getStyle(e + 1)),
-                    averageCenter: true,
-                    gridSize: 28,
-                    maxZoom: 18,
-                    zoomOnClick: false,
-                }),
-                'clusterclick',
-                cluster => {
-                    const {lat, lng} = cluster.getCenter();
-
-                    // Never allow bigger zoom than this at a time
-                    const zoom = Math.min(this.map.zoom + 3, cluster.getMarkerClusterer().getMaxZoom() + 1);
-
-                    this.goToCoordinates(lat(), lng(), offsetX, offsetY, zoom);
-                });
+        if (clusterer) {
+            this.initClusterer(clusterer, offsetX, offsetY);
         }
     }
 
@@ -179,7 +161,7 @@ class MapHandler {
         }
     }
 
-    selectPlace(marker, offsetX, offsetY) {
+    selectPlace(marker, offsetX = this.offsetX, offsetY = this.offsetY) {
         this.deselectPlace();
 
         this.goToCoordinates(marker.item.lat, marker.item.lng, offsetX, offsetY);
@@ -219,9 +201,27 @@ class MapHandler {
         }
     }
 
-    getStyle(size) {
-        let {imagePath, textSize, textColor, sizes,} = this.clusterer;
+    initClusterer(clustererOptions) {
+        google.maps.event.addListener(new MarkerClusterer(
+            this.map, this.markers, {
+                styles: [1, 2, 3, 4, 5].map(e => this.getStyle(e, clustererOptions)),
+                averageCenter: true,
+                gridSize: 28,
+                maxZoom: 18,
+                zoomOnClick: false,
+            }),
+            'clusterclick',
+            cluster => {
+                const {lat, lng} = cluster.getCenter();
 
+                // Never allow bigger zoom than this at a time
+                const zoom = Math.min(this.map.zoom + 3, cluster.getMarkerClusterer().getMaxZoom() + 1);
+
+                this.goToCoordinates(lat(), lng(), clustererOptions.offsetX, clustererOptions.offsetY, zoom);
+            });
+    }
+
+    getStyle(size, {imagePath, textSize, textColor, sizes,}) {
         sizes = sizes ? sizes : [10, 10, 10, 10, 10];
 
         return {
@@ -231,7 +231,7 @@ class MapHandler {
             height: sizes[size - 1],
             anchor: [0, 0],
             iconAnchor: [0, 0],
-            url: `${imagePath}${size}.png`,
+            url: imagePath ? `${imagePath}${size}.png` : '',
         };
     }
 }

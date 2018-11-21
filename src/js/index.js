@@ -28,6 +28,8 @@ class Places {
             this.mapHandler = new MapHandler(
                 imagePath,
                 clusterer,
+                isMobile() ? 0 : 150,
+                0
             );
 
             if (sidebar) {
@@ -72,7 +74,7 @@ class Places {
 
         tag.addEventListener('load', () => {
             this.mapHandler.initMap(this.options.mapStyle);
-            this.mapHandler.setPlaces(this.options.places, isMobile() ? 0 : 150, 0, this.options.popup ? this.selectPlace.bind(this) : null);
+            this.mapHandler.setPlaces(this.options.places, isMobile() ? 0 : 150, 0, this.options.clusterer, this.options.popup ? this.selectPlace.bind(this) : null);
             this.mapHandler.getLocation();
 
             if (this.mapSearch) {
