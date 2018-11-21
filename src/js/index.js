@@ -27,7 +27,6 @@ class Places {
         if (mapDiv) {
             this.mapHandler = new MapHandler(
                 imagePath,
-                popup ? this.selectPlace.bind(this) : null,
                 clusterer,
             );
 
@@ -75,7 +74,7 @@ class Places {
 
         tag.addEventListener('load', () => {
             this.mapHandler.initMap(this.options.mapStyle);
-            this.mapHandler.setPlaces(this.options.places, isMobile() ? 0 : 300, 0);
+            this.mapHandler.setPlaces(this.options.places, isMobile() ? 0 : 300, 0, this.options.popup ? this.selectPlace.bind(this) : null);
             this.mapHandler.getLocation();
 
             if (this.mapSearch) {
