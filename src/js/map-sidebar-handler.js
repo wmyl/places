@@ -18,12 +18,12 @@ class MapSidebarHandler {
             this.resultWrapperHTML = this.resultWrapper.innerHTML;
         }
 
-        if (sidebarOptions.mobileBreakpoint) {
+        if (sidebarOptions.mobileButtonsBar) {
             new MobileButtonsBar();
         }
     }
 
-    buildSidebar ({ mobileBreakpoint, searchBar, footer }) {
+    buildSidebar ({ mobileButtonsBar, searchBar, footer }) {
         let html = `<div class="${SELECTOR_CLASS}-sidebar">`;
 
         if (searchBar) {
@@ -32,8 +32,8 @@ class MapSidebarHandler {
                                 '</div>';
         }
 
-        if (mobileBreakpoint) {
-            html += this.getMobileBarHTML({mobileBreakpoint, searchBar})
+        if (mobileButtonsBar) {
+            html += this.getMobileBarHTML({searchBar})
         }
 
         html += `<div class="${SELECTOR_CLASS}-sidebar__wrapper">` +
@@ -70,7 +70,6 @@ class MapSidebarHandler {
                 html += `<div class=${SELECTOR_CLASS}-footer__logo>`
             }
 
-            // TODO: Maybe
             html += `<img src="${logo}" class="${SELECTOR_CLASS}-footer__image"/>`
 
             if (logoLink) {
@@ -91,10 +90,12 @@ class MapSidebarHandler {
                            '0 platser' +
                        '</span>' +
                        `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--search">` +
-                            (sidebarOptions.searchBar.searchIcon ? `<img src="${sidebarOptions.searchBar.searchIcon}" class="${SELECTOR_CLASS}-search-bar__icon" alt="sök">` : '') +
+                            (sidebarOptions.searchBar.searchIcon ? `<img src="${sidebarOptions.searchBar.searchIcon}" class="${SELECTOR_CLASS}-search-bar__icon" alt="sök">` : 'Sök') +
                         '</button>' +
-                       `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn m-mobile-buttons-bar__btn--toggle">` +
-                           `<img src="${sidebarOptions.mobileListToggle}" class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">` +
+                       `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--toggle">` +
+                           (sidebarOptions.mobileListToggle ?
+                               `<img src="${sidebarOptions.mobileListToggle}" class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">` :
+                               `<span class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">V</span>`) +
                        '</button>' +
                    '</div>';
     }
@@ -131,7 +132,7 @@ class MapSidebarHandler {
 
     setNumberVisibleMarkers(visibleMarkers, fromSearch) {
         const content = visibleMarkers.length + ' plats' + (visibleMarkers.length !== 1 ? 'er' : '') + (fromSearch ? ' i närheten' : '');
-        if (!!this.sidebarOptions.mobileBreakpoint) {
+        if (!!this.sidebarOptions.mobileButtonsBar) {
             this.buttonBarResult.innerHTML = content;
         } else {
             this.sidebarNumberPlaces.innerHTML = content;

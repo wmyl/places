@@ -57,25 +57,40 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        top: 0;
+        top: auto;
+        right: 0;
         z-index: 1;
         display: flex;
         justify-content: flex-start;
         flex-direction: column;
-        background: #ffffff55;
+        background: none;
+        transition: .5s all ease;
 
         @media screen and (min-width: 960px) {
             width: 300px;
             top: 0;
             right: auto;
+            background: #ffffff55;
             justify-content: space-between;
+        }
+
+        &--hidden {
+            @media screen and (max-width: 960px) {
+                transform: translateY(calc(100% - 85px));
+            }
+
+            .places-sidebar__wrapper {
+                opacity: 0;
+            }
         }
 
         &__wrapper {
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            max-height: calc(360px);
+            max-height: 360px;
+            opacity: 1;
+            transition: .5s all ease;
 
             @media screen and (min-width: 960px) {
                 max-height: none;
@@ -96,6 +111,25 @@
 
             @media screen and (min-width: 960px) {
                 display: block;
+            }
+        }
+
+        &__search {
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: transform .3s linear, opacity .2s linear;
+            -webkit-transform-style: preserve-3d;
+            -webkit-backface-visibility: hidden;
+
+            &--show {
+                opacity: 1;
+                transform: initial;
+            }
+
+            @media screen and (min-width: 960px) {
+                opacity: 1;
+                position: static;
+                transform: none;
             }
         }
     }
@@ -143,7 +177,7 @@
     }
 
     &-footer {
-        display: flex;
+        display: none;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
@@ -151,6 +185,10 @@
         min-height: 80px;
         padding: 5px 30px 5px 20px; // Align with menu lines
         background: #fff;
+
+        @media screen and (min-width: 960px) {
+            display: flex;
+        }
 
         &__text {
             margin: 0 10px 6px 0;
@@ -198,6 +236,44 @@
             margin: 0;
             width: auto;
             height: auto;
+        }
+    }
+
+    &-mobile-buttons-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        height: 45px;
+        padding: 0 20px;
+        opacity: 1;
+        background: #fff;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform-style: preserve-3d;
+
+        &__result {
+            flex-grow: 1;
+        }
+
+        &__btn {
+            width: 45px;
+            padding: 10px;
+        }
+
+        &__icon {
+            width: 24px;
+            margin-left: 5px;
+
+            &--toggle {
+                transition: transform .2s ease;
+            }
+
+            &--up {
+                transform: scaleY(-1);
+            }
+        }
+
+        @media screen and (min-width: 960px) {
+            display: none;
         }
     }
 }

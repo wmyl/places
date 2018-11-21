@@ -46,7 +46,7 @@ class Places {
             }
 
             if (loadingScreen) {
-                this.loadScreen = document.querySelector('.o-loading-screen');
+                this.loadScreen = document.querySelector(`.${SELECTOR_CLASS}-loading-screen`);
             }
 
             this.loadGoogleApis(() => google.maps.event.addDomListener(window, 'load', init));
@@ -132,14 +132,13 @@ class Places {
                 this.sidebarHandler.setNumberVisibleMarkers(this.mapHandler.getVisibleMarkers(), true);
             }
         });
-
     }
 
     selectPlace(marker) {
         const popup = this.mapPopup.createPlacePopup(marker.item);
         const height = parseFloat(window.getComputedStyle(popup).height.split('px')[0]);
         const OFFSET_Y = 60; //px
-        this.mapHandler.selectPlace(marker, (this.isMobile() || !this.sidebarHandler) ? 0 : 150, (height / 2) + OFFSET_Y);
+        this.mapHandler.selectPlace(marker, (isMobile() || !this.sidebarHandler) ? 0 : 150, (height / 2) + OFFSET_Y);
         this.mapPopup.showPopup();
     }
 
@@ -164,21 +163,10 @@ class Places {
     static formatClassName(selector) {
         return selector.charAt(0) === '.' ? selector : ('.' + selector);
     }
-
-    isMobile() {
-        const sidebar = this.options.sidebar;
-        if (sidebar) {
-            if (sidebar.mobileBreakpoint) {
-                return document.body.clientWidth < sidebar.mobileBreakpoint;
-            } else {
-                return false;
-            }
-        }
-        return isMobile();
-    }
 }
 
-export const isMobile = () => document.body.clientWidth < 960; // $bp-medium;
+export const MOBILE_BP = 960;
+export const isMobile = () => document.body.clientWidth < MOBILE_BP; // $bp-medium;
 export const SELECTOR_CLASS = 'places';
 
 export default Places;

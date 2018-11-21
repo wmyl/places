@@ -1,4 +1,5 @@
 import { SELECTOR_CLASS } from "./index";
+import { isMobile } from "./index";
 
 class MapPopup {
 
@@ -25,7 +26,7 @@ class MapPopup {
         const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
 
         const html = `<div class="${SELECTOR_CLASS}-popup ${SELECTOR_CLASS}-popup--close ` +
-                     `${hasSidebar ? (SELECTOR_CLASS + '-popup--sidebar') : ''}">` +
+                     `${hasSidebar && !isMobile() ? (SELECTOR_CLASS + '-popup--sidebar') : ''}">` +
             `<button class="${SELECTOR_CLASS}-popup__close">x</button>` +
             `<div class="${SELECTOR_CLASS}-popup__container"></div>` +
             '</div>';
