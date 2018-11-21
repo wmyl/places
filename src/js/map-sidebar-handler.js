@@ -45,33 +45,6 @@ class MapSidebarHandler {
                         '</div>';
 
         document.querySelector(`.${SELECTOR_CLASS}`).insertAdjacentHTML('beforeend', html);
-
-        /*
-        <footer class="o-footer{{ classes }}">
-            {% if footer_text %}
-                <p class="o-footer__text">{{ footer_text }}</p>
-            {% endif %}
-
-            {% if footer_logo_link %}
-                {% set title = __('We Made You Look', 'wmyl') %}
-                {% if footer_logo_link.title %}
-                    {% set title = footer_logo_link.title %}
-                {% endif %}
-
-                <a class="o-footer__logo o-footer__logo--link" href="{{ footer_logo_link.url }}" title="{{ title }}" target="_blank" rel='noopener noreferrer nofollow'>
-                    <svg role="img" class="a-site-logo o-footer__image">
-                        <use xlink:href="{{ theme.link }}/static/icons/sprite.svg#sprite-wmyl-logo-bold"/>
-                    </svg>
-                </a>
-            {% else %}
-                <div class="o-footer__logo">
-                    <svg role="img" class="a-site-logo o-footer__image">
-                        <use xlink:href="{{ theme.link }}/static/icons/sprite.svg#sprite-wmyl-logo-bold"/>
-                    </svg>
-                </div>
-            {% endif %}
-        </footer>
-         */
     }
 
     getFooterHTML(footerOptions) {

@@ -1,7 +1,9 @@
+import { SELECTOR_CLASS } from "./index";
+
 class MapSearch {
     constructor(onPlaceChange) {
-        this.input = document.querySelector('.m-search-bar__input');
-        this.btn = document.querySelector('.m-search-bar__btn');
+        this.input = document.querySelector(`.${SELECTOR_CLASS}-search-bar__input`);
+        this.btn = document.querySelector(`.${SELECTOR_CLASS}-search-bar__btn`);
         this.onPlaceChange = onPlaceChange;
     }
 
@@ -30,11 +32,11 @@ class MapSearch {
     }
 
     static getHTML(searchOptions) {
-        return '<div class="m-search-bar">' +
-                    '<label for="search" class="u-visually-hidden">Sök</label>' +
-                    `<input class="m-search-bar__input" id="search" placeholder="${searchOptions.placeholder ? searchOptions.placeholder : ''}" type="text" />` +
-                    '<button class="m-search-bar__btn" title="sök">' +
-                        (searchOptions.searchIcon ? `<img src="${searchOptions.searchIcon}" class="m-search-bar__icon" alt="sök">` : '') +
+        return `<div class="${SELECTOR_CLASS}-search-bar">` +
+                    `<label for="search" class="${SELECTOR_CLASS}-visually-hidden">Sök</label>` +
+                    `<input class="${SELECTOR_CLASS}-search-bar__input" id="search" placeholder="${searchOptions.placeholder ? searchOptions.placeholder : ''}" type="text" />` +
+                    `<button class="${SELECTOR_CLASS}-search-bar__btn" title="sök">` +
+                        (searchOptions.searchIcon ? `<img src="${searchOptions.searchIcon}" class="${SELECTOR_CLASS}-search-bar__icon" alt="sök">` : 'Sök') +
                     '</button>' +
                 '</div>';
     }
