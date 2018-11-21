@@ -28,9 +28,10 @@
         display: flex;
         justify-content: flex-start;
         flex-direction: column;
+        background: #ffffff55;
 
         @media screen and (min-width: 960px) {
-            max-width: 300px;
+            width: 300px;
             top: 0;
             right: auto;
             justify-content: space-between;
@@ -103,6 +104,30 @@
             max-height: 100%;
             margin: 0;
             border-radius: 50%;
+        }
+    }
+
+    &-footer {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        height: 80px;
+        padding: 20px 30px 20px 20px; // Align with menu lines
+        background: #fff;
+
+        @media screen and (min-width: 960px) {
+            padding-right: 35px; // Align with menu lines
+        }
+
+        &__text {
+            margin: 0 10px 6px 0;
+            font-size: 15px;
+        }
+
+        &__image {
+            width: 120px;
+            height: 38px;
         }
     }
 }

@@ -23,7 +23,7 @@ class MapSidebarHandler {
         }
     }
 
-    buildSidebar ({ mobileBreakpoint, searchBar }) {
+    buildSidebar ({ mobileBreakpoint, searchBar, footer }) {
         let html = `<div class="${SELECTOR_CLASS}-sidebar">`;
 
         if (searchBar) {
@@ -39,11 +39,73 @@ class MapSidebarHandler {
         html += `<div class="${SELECTOR_CLASS}-sidebar__wrapper">` +
                                 `<div class="${SELECTOR_CLASS}-sidebar__results"></div>` +
                                 `<span class="${SELECTOR_CLASS}-sidebar__number-places">0 platser</span>` +
-                                // Footer
+                                this.getFooterHTML(footer) +
+
                             '</div>' +
                         '</div>';
 
         document.querySelector(`.${SELECTOR_CLASS}`).insertAdjacentHTML('beforeend', html);
+
+        /*
+        <footer class="o-footer{{ classes }}">
+            {% if footer_text %}
+                <p class="o-footer__text">{{ footer_text }}</p>
+            {% endif %}
+
+            {% if footer_logo_link %}
+                {% set title = __('We Made You Look', 'wmyl') %}
+                {% if footer_logo_link.title %}
+                    {% set title = footer_logo_link.title %}
+                {% endif %}
+
+                <a class="o-footer__logo o-footer__logo--link" href="{{ footer_logo_link.url }}" title="{{ title }}" target="_blank" rel='noopener noreferrer nofollow'>
+                    <svg role="img" class="a-site-logo o-footer__image">
+                        <use xlink:href="{{ theme.link }}/static/icons/sprite.svg#sprite-wmyl-logo-bold"/>
+                    </svg>
+                </a>
+            {% else %}
+                <div class="o-footer__logo">
+                    <svg role="img" class="a-site-logo o-footer__image">
+                        <use xlink:href="{{ theme.link }}/static/icons/sprite.svg#sprite-wmyl-logo-bold"/>
+                    </svg>
+                </div>
+            {% endif %}
+        </footer>
+         */
+    }
+
+    getFooterHTML(footerOptions) {
+        let html = `<footer class="${SELECTOR_CLASS}-footer">`;
+
+        if (!footerOptions) return html + '</footer>';
+
+        const { text, logo, logoLink, logoTitle } = footerOptions;
+
+        if (text) {
+            html += `<p class="${SELECTOR_CLASS}-footer__text">${text}</p>`;
+        }
+
+        if (logo) {
+            if (logoLink) {
+                html += `<a class="${SELECTOR_CLASS}-footer__logo ${SELECTOR_CLASS}-footer__logo--link" ` +
+                        `href="${logoLink}" title="${logoTitle ? logoTitle : 'Footer Logo'}" target="_blank" rel="noopener noreferrer nofollow">`
+            } else {
+                html += `<div class=${SELECTOR_CLASS}-footer__logo>`
+            }
+
+            // TODO: Maybe
+            html += `<img src="${logo}" class="${SELECTOR_CLASS}-footer__image"/>`
+
+            if (logoLink) {
+                html += '</a>';
+            } else {
+                html += '</div>';
+            }
+        }
+
+        html += '</footer>';
+
+        return html;
     }
 
     getMobileBarHTML(sidebarOptions) {
