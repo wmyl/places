@@ -40,7 +40,7 @@ class Places {
             if (popup) {
                 this.mapPopup = new MapPopup(
                     popup,
-                    mapDiv,
+                    !!sidebar,
                     () => this.mapHandler.deselectPlace()
                 );
             }
@@ -74,7 +74,7 @@ class Places {
 
         tag.addEventListener('load', () => {
             this.mapHandler.initMap(this.options.mapStyle);
-            this.mapHandler.setPlaces(this.options.places, isMobile() ? 0 : 300, 0, this.options.popup ? this.selectPlace.bind(this) : null);
+            this.mapHandler.setPlaces(this.options.places, isMobile() ? 0 : 150, 0, this.options.popup ? this.selectPlace.bind(this) : null);
             this.mapHandler.getLocation();
 
             if (this.mapSearch) {
@@ -139,7 +139,7 @@ class Places {
         const popup = this.mapPopup.createPlacePopup(marker.item);
         const height = parseFloat(window.getComputedStyle(popup).height.split('px')[0]);
         const OFFSET_Y = 60; //px
-        this.mapHandler.selectPlace(marker, (this.isMobile() || !this.sidebarHandler) ? 0 : 300, (height / 2) + OFFSET_Y);
+        this.mapHandler.selectPlace(marker, (this.isMobile() || !this.sidebarHandler) ? 0 : 150, (height / 2) + OFFSET_Y);
         this.mapPopup.showPopup();
     }
 

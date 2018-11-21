@@ -2,12 +2,12 @@ import { SELECTOR_CLASS } from "./index";
 
 class MapPopup {
 
-    constructor(popupOptions, mapDiv, onClose) {
+    constructor(popupOptions, hasSidebar, onClose) {
         this.sidebar = document.querySelector(`.${SELECTOR_CLASS}-sidebar`);
         this.popupOptions = popupOptions;
         this.buttonBarIcon = document.querySelector(`.${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle`);
 
-        this.buildPopup(mapDiv);
+        this.buildPopup(hasSidebar);
 
         this.popup = document.querySelector(`.${SELECTOR_CLASS}-popup`);
         this.popupContainer = this.popup.querySelector(`.${SELECTOR_CLASS}-popup__container`);
@@ -21,8 +21,11 @@ class MapPopup {
         if (onClose) onClose();
     }
 
-    buildPopup(mapDiv) {
-        const html = `<div class="${SELECTOR_CLASS}-popup ${SELECTOR_CLASS}-popup--close">` +
+    buildPopup(hasSidebar) {
+        const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
+
+        const html = `<div class="${SELECTOR_CLASS}-popup ${SELECTOR_CLASS}-popup--close ` +
+                     `${hasSidebar ? (SELECTOR_CLASS + '-popup--sidebar') : ''}">` +
             `<button class="${SELECTOR_CLASS}-popup__close">x</button>` +
             `<div class="${SELECTOR_CLASS}-popup__container"></div>` +
             '</div>';
