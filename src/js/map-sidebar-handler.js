@@ -75,6 +75,10 @@ class MapSidebarHandler {
     }
 
     getFooterHTML(footerOptions) {
+        if (footerOptions && footerOptions.html) {
+            return footerOptions.html;
+        }
+
         let html = `<footer class="${SELECTOR_CLASS}-footer">`;
 
         if (!footerOptions) return html + '</footer>';
