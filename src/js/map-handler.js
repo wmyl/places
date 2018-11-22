@@ -9,18 +9,9 @@ import {SELECTOR_CLASS} from "./index";
 
 class MapHandler {
     constructor(imagePath) {
-        this.markers = [];
         this.imagePath = imagePath;
 
-        this.buildMapWrapper();
-    }
-
-    buildMapWrapper() {
-        const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
-
-        if (mapDiv) {
-            mapDiv.insertAdjacentHTML('beforeend', `<div class=${SELECTOR_CLASS}__container></div>`);
-        }
+        MapHandler._buildMapWrapper();
     }
 
     initMap(style, startPos, noGeoloc) {
@@ -30,7 +21,7 @@ class MapHandler {
 
         const mapOptions = {
             zoom: 14,
-            center: new google.maps.LatLng(startPos.lat? startPos.lat : '57.7004286', startPos.lng ? startPos.lng : '11.9543521'),
+            center: new google.maps.LatLng(startPos.lat ? startPos.lat : '57.7004286', startPos.lng ? startPos.lng : '11.9543521'),
             styles: styles[style] ? styles[style] : style,
             disableDefaultUI: true
         };
@@ -38,35 +29,16 @@ class MapHandler {
         const mapWrapper = document.querySelector(`.${SELECTOR_CLASS}__container`);
 
         this.map = new google.maps.Map(mapWrapper, mapOptions);
-        if (!noGeoloc && navigator.geolocation) {
-
-            // Set center to your own location - if enabled
-            // This can take a while depending on GPS availability etc
-            navigator.geolocation.getCurrentPosition(
-                ({coords}) => {
-                    const pos = {
-                        lat: coords.latitude,
-                        lng: coords.longitude
-                    };
-
-                    this.clientPosition = pos;
-                    this.map.setCenter(pos);
-                    console.log('Location found.');
-                },
-                error => {
-                    console.log('Error with geolocation: ', error);
-                }
-            );
-        } else {
-            console.log('No geoloc enabled.');
+        if (!noGeoloc) {
+            this._initGeoloc();
         }
     }
 
     setPlaces(places, offsetX, offsetY, onMarkerClick, clusterer) {
-        this.markers = [];
+        this.markers = places.map(place => {
 
-        places.forEach((place) => {
-            const {lat, lng, type} = place;
+            const { lat, lng, type } = place;
+
             const marker = new google.maps.Marker({
                 position: new google.maps.LatLng(lat, lng),
                 map: this.map,
@@ -74,23 +46,24 @@ class MapHandler {
                 icon: !this.imagePath ? null : {
                     url: `${this.imagePath}${type ? type : ''}.png`,
                     scaledSize: new google.maps.Size(32, 40),
-                }
+                },
             });
 
             if (onMarkerClick) {
                 marker.addListener('click', () => onMarkerClick(marker));
             }
 
-            this.markers.push(marker);
+            return marker;
         });
 
         if (clusterer) {
-            this.initClusterer(clusterer, offsetX, offsetY);
+            this._initClusterer(clusterer, offsetX, offsetY);
         }
     }
 
     goToSearchedPlace(searchedPlace) {
         return new Promise((resolve, reject) => {
+
             // The case where the user didn't choose any of the locations in the list
             if (!searchedPlace.geometry) {
                 const autocompleteService = new google.maps.places.AutocompleteService();
@@ -106,9 +79,9 @@ class MapHandler {
                         const placesService = new google.maps.places.PlacesService(this.map);
 
                         // Pick the first in the autocompletion list as default
-                        placesService.getDetails({
-                            reference: resultList[0].reference
-                        }, (detailsResult, placesServiceStatus) => {
+                        placesService.getDetails(
+                            {reference: resultList[0].reference},
+                            (detailsResult, placesServiceStatus) => {
 
                             // Run the same method again but with an actual place
                             if (detailsResult) {
@@ -152,39 +125,35 @@ class MapHandler {
         this.map.setZoom(ZOOM);
     }
 
-    getLocation() {
-        const _this = this;
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                let pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                _this.map.setCenter(pos);
-                _this.map.setZoom(16);
-            });
-        } else {
-            alert('sorry your browser does not support Geolocation');
-        }
-    }
-
     selectPlace(marker, offsetX = this.offsetX, offsetY = this.offsetY) {
         this.deselectPlace();
 
         this.goToCoordinates(marker.item.lat, marker.item.lng, offsetX, offsetY);
         this.selectedMarker = marker;
-        this.resizeMarker(marker, true);
+        this._resizeMarker(marker, true);
     }
 
     deselectPlace() {
         if (this.selectedMarker) {
-            this.resizeMarker(this.selectedMarker, false);
+            this._resizeMarker(this.selectedMarker, false);
         }
         this.selectedMarker = null;
     }
 
-    resizeMarker(marker, active) {
+    getVisibleMarkers() {
+        // Filter out markers in view port
+        return this.markers.filter(marker => MapHandler._inViewPort(this.map.getBounds(), marker.item));
+    }
+
+    static _buildMapWrapper() {
+        const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
+
+        if (mapDiv) {
+            mapDiv.insertAdjacentHTML('beforeend', `<div class=${SELECTOR_CLASS}__container></div>`);
+        }
+    }
+
+    _resizeMarker(marker, active) {
         if (this.imagePath) {
             marker.setIcon({
                 url: `${this.imagePath}${marker.item.type ? marker.item.type : ''}.png`,
@@ -195,23 +164,39 @@ class MapHandler {
         return marker;
     }
 
-    getVisibleMarkers() {
-        // Filter out markers in view port
-        return this.markers.filter(marker => this.inViewPort(this.map.getBounds(), marker.item));
+    static _inViewPort(mapView, {lng, lat}) {
+        return lng < mapView.j.l && lng > mapView.j.j && lat < mapView.l.l && lat > mapView.l.j;
     }
 
-    inViewPort(mapView, {lng, lat}) {
-        if (lng < mapView.j.l && lng > mapView.j.j) {
-            if (lat < mapView.l.l && lat > mapView.l.j) {
-                return true;
-            }
+    _initGeoloc() {
+        if (navigator.geolocation) {
+
+            // Set center to your own location - if enabled
+            // This can take a while depending on GPS availability etc
+            navigator.geolocation.getCurrentPosition(
+                ({coords}) => {
+                    const pos = {
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    };
+
+                    this.clientPosition = pos;
+                    this.map.setCenter(pos);
+                    console.log('Location found.');
+                },
+                error => {
+                    console.log('Error with geolocation: ', error);
+                }
+            );
+        } else {
+            console.log('No geoloc enabled.');
         }
     }
 
-    initClusterer(clustererOptions) {
+    _initClusterer(clustererOptions) {
         google.maps.event.addListener(new MarkerClusterer(
             this.map, this.markers, {
-                styles: [1, 2, 3, 4, 5].map(e => this.getStyle(e, clustererOptions)),
+                styles: [1, 2, 3, 4, 5].map(e => MapHandler._getStyle(e, clustererOptions)),
                 averageCenter: true,
                 gridSize: 28,
                 maxZoom: 18,
@@ -228,7 +213,7 @@ class MapHandler {
             });
     }
 
-    getStyle(size, {imagePath, textSize, textColor, sizes,}) {
+    static _getStyle(size, {imagePath, textSize, textColor, sizes,}) {
         sizes = sizes ? sizes : [10, 10, 10, 10, 10];
 
         return {

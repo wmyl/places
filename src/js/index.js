@@ -8,7 +8,7 @@ import '../scss/style.scss';
 
 class Places {
 
-    constructor({tag, places, sidebar, popup, imagePath, clusterer, mapStyle, startPos}) {
+    constructor({tag, places, sidebar, popup, imagePath, clusterer, mapStyle, startPos, noGeoloc}) {
 
         if (document.querySelector('.' + SELECTOR_CLASS)) {
             this.mapHandler = new MapHandler(imagePath);
@@ -25,13 +25,11 @@ class Places {
             const onScriptLoaded = () => google.maps.event.addDomListener(window, 'load', init);
 
             this._loadGoogleApis(onScriptLoaded, tag).then(() => {
-                this.mapHandler.initMap(mapStyle, startPos);
+                this.mapHandler.initMap(mapStyle, startPos, noGeoloc);
 
                 const onMarkerClick = popup ? marker => this._selectPlace(marker) : null;
 
                 this.mapHandler.setPlaces(places, this._getOffsetX(), 0, onMarkerClick, clusterer);
-
-                this.mapHandler.getLocation();
 
                 if (this.mapSearch) {
                     this.mapSearch.initSearch();
