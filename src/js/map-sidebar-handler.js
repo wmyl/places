@@ -7,39 +7,64 @@ class MapSidebarHandler {
     constructor(sidebarOptions, imagePath) {
 
         this.imagePath = imagePath;
-        this.sidebarOptions = sidebarOptions;
-        this.buildSidebar(sidebarOptions);
+        MapSidebarHandler._buildSidebar(sidebarOptions);
 
         this.resultWrapper = document.querySelector(`.${SELECTOR_CLASS}-sidebar__results`);
         this.buttonBarResult = document.querySelector(`.${SELECTOR_CLASS}-mobile-buttons-bar__result`);
         this.sidebarNumberPlaces = document.querySelector(`.${SELECTOR_CLASS}-sidebar__number-places`);
 
-        if (this.resultWrapper) {
-            this.resultWrapperHTML = this.resultWrapper.innerHTML;
-        }
 
         new MobileButtonsBar();
     }
 
-    buildSidebar ({ searchBar, footer }) {
+    populateSidebar(visibleMarkers, onclick, position) {
+
+        this._sortMarkers(visibleMarkers, position).forEach(marker => {
+            const { name, type, } = marker.item;
+
+            const item = document.createElement("BUTTON");
+            item.classList.add(`${SELECTOR_CLASS}-sidebar-item`);
+            item.onclick = () => onclick(marker);
+            item.innerHTML = `<span class="${SELECTOR_CLASS}-sidebar-item__name">${name}</span>` +
+                (this.imagePath ?
+                        `<img class="${SELECTOR_CLASS}-sidebar-item__logo " src="${this.imagePath}${marker.item.type ? marker.item.type : ''}.png" alt="${type}"/>` :
+                        `<div></div>`
+                 );
+
+            this.resultWrapper.appendChild(item);
+        });
+
+        this.setNumberVisibleMarkers(visibleMarkers);
+    }
+
+    setNumberVisibleMarkers(visibleMarkers, isArea) {
+        const content = visibleMarkers.length + ' plats' + (visibleMarkers.length !== 1 ? 'er' : '') + (isArea ? ' i närheten' : '');
+        if (isMobile()) {
+            this.buttonBarResult.innerHTML = content;
+        } else {
+            this.sidebarNumberPlaces.innerHTML = content;
+        }
+    }
+
+    static _buildSidebar ({ searchBar, footer }) {
         let html = `<div class="${SELECTOR_CLASS}-sidebar">`;
 
         html += `<div class="${SELECTOR_CLASS}-sidebar__search">` +
             MapSearch.getHTML(searchBar) +
             '</div>';
-        html += this.getMobileBarHTML({searchBar})
+        html += MapSidebarHandler._getMobileBarHTML({searchBar})
         html += `<div class="${SELECTOR_CLASS}-sidebar__wrapper">` +
-                                `<div class="${SELECTOR_CLASS}-sidebar__results"></div>` +
-                                `<span class="${SELECTOR_CLASS}-sidebar__number-places">0 platser</span>` +
-                                this.getFooterHTML(footer) +
+            `<div class="${SELECTOR_CLASS}-sidebar__results"></div>` +
+            `<span class="${SELECTOR_CLASS}-sidebar__number-places">0 platser</span>` +
+            MapSidebarHandler._getFooterHTML(footer) +
 
-                            '</div>' +
-                        '</div>';
+            '</div>' +
+            '</div>';
 
         document.querySelector(`.${SELECTOR_CLASS}`).insertAdjacentHTML('beforeend', html);
     }
 
-    getFooterHTML(footerOptions) {
+    static _getFooterHTML(footerOptions) {
         if (footerOptions && footerOptions.html) {
             return footerOptions.html;
         }
@@ -57,7 +82,7 @@ class MapSidebarHandler {
         if (logo) {
             if (logoLink) {
                 html += `<a class="${SELECTOR_CLASS}-footer__logo ${SELECTOR_CLASS}-footer__logo--link" ` +
-                        `href="${logoLink}" title="${logoTitle ? logoTitle : 'Footer Logo'}" target="_blank" rel="noopener noreferrer nofollow">`
+                    `href="${logoLink}" title="${logoTitle ? logoTitle : 'Footer Logo'}" target="_blank" rel="noopener noreferrer nofollow">`
             } else {
                 html += `<div class=${SELECTOR_CLASS}-footer__logo>`
             }
@@ -76,74 +101,32 @@ class MapSidebarHandler {
         return html;
     }
 
-    getMobileBarHTML(sidebarOptions) {
+    static _getMobileBarHTML(sidebarOptions) {
         return `<div class="${SELECTOR_CLASS}-mobile-buttons-bar">` +
-                       `<span class="${SELECTOR_CLASS}-mobile-buttons-bar__result">` +
-                           '0 platser' +
-                       '</span>' +
-                       `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--search">` +
-                            (sidebarOptions.searchBar && sidebarOptions.searchBar.searchIcon ? `<img src="${sidebarOptions.searchBar.searchIcon}" class="${SELECTOR_CLASS}-search-bar__icon" alt="sök">` : 'Sök') +
-                        '</button>' +
-                       `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--toggle">` +
-                           (sidebarOptions.mobileListToggle ?
-                               `<img src="${sidebarOptions.mobileListToggle}" class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">` :
-                               `<span class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">V</span>`) +
-                       '</button>' +
-                   '</div>';
+            `<span class="${SELECTOR_CLASS}-mobile-buttons-bar__result">` +
+            '0 platser' +
+            '</span>' +
+            `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--search">` +
+            (sidebarOptions.searchBar && sidebarOptions.searchBar.searchIcon ? `<img src="${sidebarOptions.searchBar.searchIcon}" class="${SELECTOR_CLASS}-search-bar__icon" alt="sök">` : 'Sök') +
+            '</button>' +
+            `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--toggle">` +
+            (sidebarOptions.mobileListToggle ?
+                `<img src="${sidebarOptions.mobileListToggle}" class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">` :
+                `<span class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">V</span>`) +
+            '</button>' +
+            '</div>';
     }
 
-    populateSidebar(visibleMarkers, onclick, position) {
-        const { resultWrapper, resultWrapperHTML } = this;
-        if (!resultWrapper) return;
-
-        resultWrapper.innerHTML = resultWrapperHTML;
-
-        this.sortMarkers(visibleMarkers, position).forEach(marker => {
-            const {
-                name,
-                type,
-                address,
-                long,
-                lat,
-                link,
-                phone,
-                comment,
-            } = marker.item;
-
-            const item = document.createElement("BUTTON");
-            item.classList.add(`${SELECTOR_CLASS}-sidebar-item`);
-            item.onclick = () => onclick(marker);
-            item.innerHTML = `<span class="${SELECTOR_CLASS}-sidebar-item__name">${name}</span>` +
-                (this.imagePath ?
-                        `<img class="${SELECTOR_CLASS}-sidebar-item__logo " src="${this.imagePath}${marker.item.type ? marker.item.type : ''}.png" alt="${type}"/>` :
-                        `<div></div>`
-                 );
-
-            resultWrapper.appendChild(item);
-        });
-
-        this.setNumberVisibleMarkers(visibleMarkers);
-    }
-
-    setNumberVisibleMarkers(visibleMarkers, isArea) {
-        const content = visibleMarkers.length + ' plats' + (visibleMarkers.length !== 1 ? 'er' : '') + (isArea ? ' i närheten' : '');
-        if (isMobile()) {
-            this.buttonBarResult.innerHTML = content;
-        } else {
-            this.sidebarNumberPlaces.innerHTML = content;
-        }
-    }
-
-    sortMarkers(markers, position) {
+    _sortMarkers(markers, position) {
         if (position) { // Sort by distance
             return markers.sort((a,b) =>
-                MapSidebarHandler.getDistance(
+                MapSidebarHandler._getDistance(
                     position,
                     {
                         lat: parseFloat(a.item.lat),
                         lng: parseFloat(a.item.lng)
                     }
-                ) < MapSidebarHandler.getDistance(
+                ) < MapSidebarHandler._getDistance(
                     position,
                     {
                         lat: parseFloat(b.item.lat),
@@ -155,7 +138,7 @@ class MapSidebarHandler {
         }
     }
 
-    static getDistance(pos1, pos2) {
+    static _getDistance(pos1, pos2) {
         const dx = pos2.lat - pos1.lat;
         const dy = pos2.lng - pos2.lng;
 

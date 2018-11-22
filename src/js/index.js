@@ -68,9 +68,7 @@ class Places {
         this.mapHandler.map.addListener('bounds_changed', () => {
             if (allowTrigger) {
                 if (this.sidebarHandler) {
-                    this.sidebarHandler.populateSidebar(this.mapHandler.getVisibleMarkers(), this._selectPlace.bind(this), this.mapHandler.clientPosition);
-
-
+                    this.sidebarHandler.populateSidebar(this.mapHandler.getVisibleMarkers(), this._selectPlace.bind(this), !!this.mapHandler.clientPosition);
                     this.mapSearch.updateBounds(this.mapHandler.map.getBounds());
                 }
                 allowTrigger = false;
