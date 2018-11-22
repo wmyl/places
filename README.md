@@ -10,13 +10,19 @@ Interactive map based on Google Maps. Each place can have a popup with informati
 
 ## Usage
 
-**Step 1 - Add HTML**
+**Step 1 - Get Google Maps API key**
+
+Don't worry! It's free, at least for a smaller amount of request.
+
+https://developers.google.com/maps/documentation/javascript/get-api-key 
+
+**Step 2 - Add HTML**
 
 Add container such as `div` with class name `places` in HTML
 
 `<div class="places"></div>`
 
-**Step 2 - Init JavaScript**
+**Step 3 - Init JavaScript**
 ```
 import Places from '@wmyl/places';
 
@@ -58,4 +64,24 @@ new Places(options);
 ...
 
 ```
+
+**Step 4 (Optional) - Add custom styling**
+
+You can override all styling on the map with your own css.
+
+<!-- TODO: Describe how -->
+
+## Options
+
+|Option    | Type    | Required | Default                                | Example use                         | Description                                                                  
+| -------- | ------- | -------- |--------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------- |
+|tag       | string  | Yes      |                                        |                                     | Google Maps Script tag with API Key |
+|places    | array   | No       | `[]`                                   |                                     | List of place objects |
+|popup     | Boolean | No       | `false`                                |                                     | Whether or not to show popup when a marker is clicked |
+|mapStyle  | any     | No       | `'default'`                            |                                     | Use one of predefined map styles or provide own |
+|startPos  | object  | No       | `{ lon: 57.7004286, lat: 11.9543521 }` |                                     | Start position of map. Will change if geoloc is enabled and position is found
+|noGeoloc  | Boolean | No       | `false`                                | `true`                              | Set to true to disable geolocation in map |
+|imagePath | string  | No       |                                        | `'/assets/images/marker'`           | Path to image. Will pick different depending on place type. |
+|sidebar   | any     | No       |                                        | `{ footer: { text: 'Visit us!' } }` | Whether to use sidebar or not and if so, specify options |
+|clusterer | any     | No       | `false`                                |                                     | Whether to use marker clustering or not and if so, specify clusterer options
 
