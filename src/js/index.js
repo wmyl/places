@@ -8,14 +8,14 @@ import '../scss/style.scss';
 
 class Places {
 
-    constructor({ tag, places, sidebar, popup, imagePath, clusterer, mapStyle }) {
+    constructor({tag, places, sidebar, popup, imagePath, clusterer, mapStyle, startPos}) {
 
         if (document.querySelector('.' + SELECTOR_CLASS)) {
             this.mapHandler = new MapHandler(imagePath);
 
             if (sidebar) {
                 this.sidebarHandler = new MapSidebarHandler(sidebar, imagePath);
-                this.mapSearch = new MapSearch(this.goToSearchedPlace.bind(this));
+                this.mapSearch = new MapSearch(this._goToSearchedPlace.bind(this));
             }
 
             if (popup) {
@@ -24,12 +24,12 @@ class Places {
 
             const onScriptLoaded = () => google.maps.event.addDomListener(window, 'load', init);
 
-            this.loadGoogleApis(onScriptLoaded, tag).then(() => {
-                this.mapHandler.initMap(mapStyle);
+            this._loadGoogleApis(onScriptLoaded, tag).then(() => {
+                this.mapHandler.initMap(mapStyle, startPos);
 
-                const onMarkerClick = popup ? marker => this.selectPlace(marker) : null;
+                const onMarkerClick = popup ? marker => this._selectPlace(marker) : null;
 
-                this.mapHandler.setPlaces(places, this.getOffsetX(), 0, onMarkerClick, clusterer);
+                this.mapHandler.setPlaces(places, this._getOffsetX(), 0, onMarkerClick, clusterer);
 
                 this.mapHandler.getLocation();
 
@@ -37,7 +37,7 @@ class Places {
                     this.mapSearch.initSearch();
                 }
 
-                this.addListeners();
+                this._addListeners();
             });
         }
     }
@@ -45,7 +45,7 @@ class Places {
     /*
     *	Add Google Api as a script tag in header.
     */
-    loadGoogleApis(onScriptLoaded, tag) {
+    _loadGoogleApis(onScriptLoaded, tag) {
         return new Promise((resolve, reject) => {
             if (typeof google !== 'undefined') onScriptLoaded();
 
@@ -62,7 +62,7 @@ class Places {
         });
     }
 
-    addListeners() {
+    _addListeners() {
 
         // Debouncing!
         let allowTrigger = true;
@@ -70,7 +70,7 @@ class Places {
         this.mapHandler.map.addListener('bounds_changed', () => {
             if (allowTrigger) {
                 if (this.sidebarHandler) {
-                    this.sidebarHandler.populateSidebar(this.mapHandler.getVisibleMarkers(), this.selectPlace.bind(this), this.mapHandler.clientPosition);
+                    this.sidebarHandler.populateSidebar(this.mapHandler.getVisibleMarkers(), this._selectPlace.bind(this), this.mapHandler.clientPosition);
 
 
                     this.mapSearch.updateBounds(this.mapHandler.map.getBounds());
@@ -82,7 +82,7 @@ class Places {
 
         const close = () => {
             if (this.mapPopup && allowTrigger) {
-                this.popupClose();
+                this._popupClose();
             }
         }
 
@@ -90,22 +90,22 @@ class Places {
         this.mapHandler.map.addListener('zoom_changed', close);
     }
 
-    goToSearchedPlace(searchedPlace) {
+    _goToSearchedPlace(searchedPlace) {
         this.mapHandler.goToSearchedPlace(searchedPlace).then(googlePlace => {
 
             // See if there is a place matching the searchResult
             const maybeMatchingPlace = this.places.find(place =>
-                Places.addressesEqual(googlePlace.formatted_address, place.address) &&
-                Places.namesEqual(googlePlace.name, place.name)
+                Places._addressesEqual(googlePlace.formatted_address, place.address) &&
+                Places._namesEqual(googlePlace.name, place.name)
             );
 
             // We have a match!
             if (maybeMatchingPlace) {
-                this.selectPlace(maybeMatchingPlace);
+                this._selectPlace(maybeMatchingPlace);
             } else if (googlePlace.types.includes('point_of_interest')) { // We do not have a match, but the place might be interesting
                 this.mapPopup.createAndShowPromptPopup(googlePlace);
             } else { // This could be for example an area
-                this.popupClose();
+                this._popupClose();
 
                 // The boolean is for showing the number of visible markers in the searched area
                 this.sidebarHandler.setNumberVisibleMarkers(this.mapHandler.getVisibleMarkers(), true);
@@ -113,35 +113,35 @@ class Places {
         });
     }
 
-    selectPlace(marker) {
+    _selectPlace(marker) {
         const popup = this.mapPopup.createPlacePopup(marker.item);
-        this.mapHandler.selectPlace(marker, this.getOffsetX(), this.getOffsetY(popup));
+        this.mapHandler.selectPlace(marker, this._getOffsetX(), this._getOffsetY(popup));
         this.mapPopup.showPopup();
     }
 
-    popupClose() {
+    _popupClose() {
         this.mapPopup.closePopup();
         this.mapHandler.deselectPlace();
     }
 
-    static addressesEqual(googleAddress,placeAddress) {
+    static _addressesEqual(googleAddress, placeAddress) {
         return googleAddress &&
-               placeAddress &&
-               googleAddress.toLowerCase().trim().replace(/,/g, '').replace(/ /g, '').startsWith(
-               placeAddress.toLowerCase().trim().replace(/,/g, '').replace(/ /g, ''));
+            placeAddress &&
+            googleAddress.toLowerCase().trim().replace(/,/g, '').replace(/ /g, '').startsWith(
+                placeAddress.toLowerCase().trim().replace(/,/g, '').replace(/ /g, ''));
     }
 
-    static namesEqual(googleName, placeName) {
+    static _namesEqual(googleName, placeName) {
         return googleName && placeName &&
-               googleName.toLowerCase().trim().replace(/ /g, '') ===
-               placeName.toLowerCase().trim().replace(/ /g, '');
+            googleName.toLowerCase().trim().replace(/ /g, '') ===
+            placeName.toLowerCase().trim().replace(/ /g, '');
     }
 
-    getOffsetX() {
+    _getOffsetX() {
         return (isMobile() || !this.sidebarHandler) ? 0 : 150;
     }
 
-    getOffsetY(popup) {
+    _getOffsetY(popup) {
         const height = parseFloat(window.getComputedStyle(popup).height.split('px')[0]);
         const OFFSET_Y = 60; //px
         return (height / 2) + OFFSET_Y;

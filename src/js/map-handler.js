@@ -3,6 +3,7 @@ require('es6-promise').polyfill();
 
 import MarkerClusterer from 'node-js-marker-clusterer';
 import 'whatwg-fetch'
+
 import styles from './styles';
 import {SELECTOR_CLASS} from "./index";
 
@@ -12,27 +13,42 @@ class MapHandler {
         this.imagePath = imagePath;
 
         this.buildMapWrapper();
-        this.mapWrapper = document.querySelector(`.${SELECTOR_CLASS}__container`);
     }
 
-    initMap(style) {
+    buildMapWrapper() {
+        const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
+
+        if (mapDiv) {
+            mapDiv.insertAdjacentHTML('beforeend', `<div class=${SELECTOR_CLASS}__container></div>`);
+        }
+    }
+
+    initMap(style, startPos, noGeoloc) {
+
+        // If undefined, make empty object
+        startPos = startPos ? startPos : {};
+
         const mapOptions = {
             zoom: 14,
-            center: new google.maps.LatLng('57.7004286', '11.9543521'),
+            center: new google.maps.LatLng(startPos.lat? startPos.lat : '57.7004286', startPos.lng ? startPos.lng : '11.9543521'),
             styles: styles[style] ? styles[style] : style,
             disableDefaultUI: true
         };
 
-        this.map = new google.maps.Map(this.mapWrapper, mapOptions);
-        if (navigator.geolocation) {
+        const mapWrapper = document.querySelector(`.${SELECTOR_CLASS}__container`);
 
-            // Set center to your own location
+        this.map = new google.maps.Map(mapWrapper, mapOptions);
+        if (!noGeoloc && navigator.geolocation) {
+
+            // Set center to your own location - if enabled
+            // This can take a while depending on GPS availability etc
             navigator.geolocation.getCurrentPosition(
-                (position) => {
+                ({coords}) => {
                     const pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
+                        lat: coords.latitude,
+                        lng: coords.longitude
                     };
+
                     this.clientPosition = pos;
                     this.map.setCenter(pos);
                     console.log('Location found.');
@@ -43,14 +59,6 @@ class MapHandler {
             );
         } else {
             console.log('No geoloc enabled.');
-        }
-    }
-
-    buildMapWrapper() {
-        const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
-
-        if (mapDiv) {
-            mapDiv.insertAdjacentHTML('beforeend', `<div class=${SELECTOR_CLASS}__container></div>`);
         }
     }
 
