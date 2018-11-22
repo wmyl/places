@@ -73,15 +73,23 @@ You can override all styling on the map with your own css.
 
 ## Options
 
-|Option    | Type    | Required | Default                                | Example use                         | Description                                                                  
-| -------- | ------- | -------- |--------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------- |
-|tag       | string  | Yes      |                                        |                                     | Google Maps Script tag with API Key |
-|places    | array   | No       | `[]`                                   |                                     | List of place objects |
-|popup     | Boolean | No       | `false`                                |                                     | Whether or not to show popup when a marker is clicked |
-|mapStyle  | any     | No       | `'default'`                            |                                     | Use one of predefined map styles or provide own |
-|startPos  | object  | No       | `{ lon: 57.7004286, lat: 11.9543521 }` |                                     | Start position of map. Will change if geoloc is enabled and position is found
-|noGeoloc  | Boolean | No       | `false`                                | `true`                              | Set to true to disable geolocation in map |
-|imagePath | string  | No       |                                        | `'/assets/images/marker'`           | Path to image. Will pick different depending on place type. |
-|sidebar   | any     | No       |                                        | `{ footer: { text: 'Visit us!' } }` | Whether to use sidebar or not and if so, specify options |
-|clusterer | any     | No       | `false`                                |                                     | Whether to use marker clustering or not and if so, specify clusterer options
+|Option    | Type    | Required | Default                                | Description                                                                  
+| -------- | ------- | -------- |--------------------------------------- | ----------------------------------------------------------------------------- 
+|tag       | string  | Yes      |                                        | Google Maps Script tag with API Key 
+|places    | array   | No       | `[]`                                   | List of place objects 
+|popup     | any     | No       |                                        | Whether to show popup on marker click or not and if so, specify popup options 
+|mapStyle  | any     | No       | `'default'`                            | Use one of predefined map styles or provide own 
+|startPos  | object  | No       | `{ lon: 57.7004286, lat: 11.9543521 }` | Start position of map. Will change if geoloc is enabled and position is found
+|noGeoloc  | Boolean | No       | `false`                                | Set to true to disable geolocation in map 
+|imagePath | string  | No       |                                        | Path to image. Will pick different depending on place type. 
+|sidebar   | any     | No       |                                        | Whether to use sidebar or not and if so, specify options 
+|clusterer | any     | No       | `false`                                | Whether to use marker clustering or not and if so, specify clusterer options
+
+**Popup options**
+
+|Option       | Type    | Required | Default | Description                                                                  
+| ----------- | ------- | -------- | ------- | -------------------------------------------------------------------------------------
+|link         | string  | No       |         | URL for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.      
+|textLink     | string  | No       |         | Text for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.
+|noResultHTML | string  | No       |         | Custom HTML to override all other HTML in the popup, when place is not present.
 
