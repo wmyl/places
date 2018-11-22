@@ -1,6 +1,6 @@
 {
-  "name": "places",
-  "version": "1.0.0",
+  "name": "@wmyl/places",
+  "version": "1.0.1",
   "description": "Interactive map based on Google Maps. Each place can have a popup with information, along with other features such as in-view list and clustering.",
   "main": "places.js",
   "scripts": {
@@ -9,8 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.wmyl.se:wmyl/places.git"
+    "url": "https://github.com/wmyl/places"
   },
+  "keywords": [
+    "google-maps",
+    "maps",
+    "google",
+    "places",
+    "interactive"
+    "javascript"
+  ],
   "author": "We Made You Look",
   "license": "ISC",
   "devDependencies": {
