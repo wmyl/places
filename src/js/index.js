@@ -8,29 +8,10 @@ import '../scss/style.scss';
 
 class Places {
 
-    constructor(options) {
+    constructor({ tag, places, sidebar, popup, imagePath, clusterer, mapStyle }) {
 
-        const {
-            tag,
-            places,
-            sidebar,
-            popup,
-            loadingScreen,
-            imagePath,
-            clusterer,
-        } = options;
-
-        this.options = options;
-
-        const mapDiv = document.querySelector('.' + SELECTOR_CLASS);
-
-        if (mapDiv) {
-            this.mapHandler = new MapHandler(
-                imagePath,
-                clusterer,
-                isMobile() ? 0 : 150,
-                0
-            );
+        if (document.querySelector('.' + SELECTOR_CLASS)) {
+            this.mapHandler = new MapHandler(imagePath);
 
             if (sidebar) {
                 this.sidebarHandler = new MapSidebarHandler(sidebar, imagePath);
@@ -38,51 +19,46 @@ class Places {
             }
 
             if (popup) {
-                this.mapPopup = new MapPopup(
-                    popup,
-                    !!sidebar,
-                    () => this.mapHandler.deselectPlace()
-                );
+                this.mapPopup = new MapPopup(popup, !!sidebar, () => this.mapHandler.deselectPlace());
             }
 
-            if (loadingScreen) {
-                this.loadScreen = document.querySelector(`.${SELECTOR_CLASS}-loading-screen`);
-            }
+            const onScriptLoaded = () => google.maps.event.addDomListener(window, 'load', init);
 
-            this.loadGoogleApis(() => google.maps.event.addDomListener(window, 'load', init));
+            this.loadGoogleApis(onScriptLoaded, tag).then(() => {
+                this.mapHandler.initMap(mapStyle);
+
+                const onMarkerClick = popup ? marker => this.selectPlace(marker) : null;
+
+                this.mapHandler.setPlaces(places, this.getOffsetX(), 0, onMarkerClick, clusterer);
+
+                this.mapHandler.getLocation();
+
+                if (this.mapSearch) {
+                    this.mapSearch.initSearch();
+                }
+
+                this.addListeners();
+            });
         }
-    }
-
-    doneLoaded() {
-        setTimeout(() => {
-            if (this.loadScreen) {
-                this.loadScreen.classList.add('o-loading-screen--hidden');
-            }
-        }, 500);
     }
 
     /*
     *	Add Google Api as a script tag in header.
     */
-    loadGoogleApis(onScriptLoaded) {
-        if (typeof google !== 'undefined') onScriptLoaded();
+    loadGoogleApis(onScriptLoaded, tag) {
+        return new Promise((resolve, reject) => {
+            if (typeof google !== 'undefined') onScriptLoaded();
 
-        let tag = document.createElement('script');
-        tag.src = this.options.tag;
-        let firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            const tagScript = document.createElement('script');
+            tagScript.src = tag;
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tagScript, firstScriptTag);
 
-        tag.addEventListener('load', () => {
-            this.mapHandler.initMap(this.options.mapStyle);
-            this.mapHandler.setPlaces(this.options.places, isMobile() ? 0 : 150, 0, this.options.clusterer, this.options.popup ? this.selectPlace.bind(this) : null);
-            this.mapHandler.getLocation();
+            // Resolve the promise when google maps script are loaded
+            tagScript.addEventListener('load', () => resolve());
 
-            if (this.mapSearch) {
-                this.mapSearch.initSearch();
-            }
-
-            this.addListeners();
-            this.doneLoaded();
+            // If not loaded after x sec, reject the promise
+            setTimeout(() => reject(), 5000);
         });
     }
 
@@ -97,38 +73,41 @@ class Places {
                     this.sidebarHandler.populateSidebar(this.mapHandler.getVisibleMarkers(), this.selectPlace.bind(this), this.mapHandler.clientPosition);
 
 
-                    //this.mapSearch.updateBounds(this.mapHandler.map.getBounds());
+                    this.mapSearch.updateBounds(this.mapHandler.map.getBounds());
                 }
                 allowTrigger = false;
                 setTimeout(() => allowTrigger = true, 100);
             }
         });
 
-        this.mapHandler.map.addListener('drag', () => {
+        const close = () => {
             if (this.mapPopup && allowTrigger) {
                 this.popupClose();
             }
-        });
-        this.mapHandler.map.addListener('zoom_changed', () => {
-            if (this.mapPopup && allowTrigger) {
-                this.popupClose();
-            }
-        });
+        }
+
+        this.mapHandler.map.addListener('drag', close);
+        this.mapHandler.map.addListener('zoom_changed', close);
     }
 
     goToSearchedPlace(searchedPlace) {
-        this.mapHandler.goToSearchedPlace(searchedPlace).then(place => {
-            const maybeDogFriendlyPlace = this.mapHandler.markers.filter(marker =>
-                Places.addressesEqual(place.formatted_address, marker.item.address) &&
-                Places.namesEqual(place.name, marker.item.name)
-            )[0];
+        this.mapHandler.goToSearchedPlace(searchedPlace).then(googlePlace => {
 
-            if (maybeDogFriendlyPlace) {
-                this.selectPlace(maybeDogFriendlyPlace);
-            } else if (place.types.includes('point_of_interest')) {
-                this.mapPopup.createAndShowPromptPopup(place);
-            } else {
+            // See if there is a place matching the searchResult
+            const maybeMatchingPlace = this.places.find(place =>
+                Places.addressesEqual(googlePlace.formatted_address, place.address) &&
+                Places.namesEqual(googlePlace.name, place.name)
+            );
+
+            // We have a match!
+            if (maybeMatchingPlace) {
+                this.selectPlace(maybeMatchingPlace);
+            } else if (googlePlace.types.includes('point_of_interest')) { // We do not have a match, but the place might be interesting
+                this.mapPopup.createAndShowPromptPopup(googlePlace);
+            } else { // This could be for example an area
                 this.popupClose();
+
+                // The boolean is for showing the number of visible markers in the searched area
                 this.sidebarHandler.setNumberVisibleMarkers(this.mapHandler.getVisibleMarkers(), true);
             }
         });
@@ -136,9 +115,7 @@ class Places {
 
     selectPlace(marker) {
         const popup = this.mapPopup.createPlacePopup(marker.item);
-        const height = parseFloat(window.getComputedStyle(popup).height.split('px')[0]);
-        const OFFSET_Y = 60; //px
-        this.mapHandler.selectPlace(marker, (isMobile() || !this.sidebarHandler) ? 0 : 150, (height / 2) + OFFSET_Y);
+        this.mapHandler.selectPlace(marker, this.getOffsetX(), this.getOffsetY(popup));
         this.mapPopup.showPopup();
     }
 
@@ -160,8 +137,14 @@ class Places {
                placeName.toLowerCase().trim().replace(/ /g, '');
     }
 
-    static formatClassName(selector) {
-        return selector.charAt(0) === '.' ? selector : ('.' + selector);
+    getOffsetX() {
+        return (isMobile() || !this.sidebarHandler) ? 0 : 150;
+    }
+
+    getOffsetY(popup) {
+        const height = parseFloat(window.getComputedStyle(popup).height.split('px')[0]);
+        const OFFSET_Y = 60; //px
+        return (height / 2) + OFFSET_Y;
     }
 }
 

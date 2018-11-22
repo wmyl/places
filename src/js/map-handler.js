@@ -167,7 +167,6 @@ class MapHandler {
         this.goToCoordinates(marker.item.lat, marker.item.lng, offsetX, offsetY);
         this.selectedMarker = marker;
         this.resizeMarker(marker, true);
-        return this.selectedMarker;
     }
 
     deselectPlace() {

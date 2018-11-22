@@ -125,8 +125,8 @@ class MapSidebarHandler {
         this.setNumberVisibleMarkers(visibleMarkers);
     }
 
-    setNumberVisibleMarkers(visibleMarkers, fromSearch) {
-        const content = visibleMarkers.length + ' plats' + (visibleMarkers.length !== 1 ? 'er' : '') + (fromSearch ? ' i närheten' : '');
+    setNumberVisibleMarkers(visibleMarkers, isArea) {
+        const content = visibleMarkers.length + ' plats' + (visibleMarkers.length !== 1 ? 'er' : '') + (isArea ? ' i närheten' : '');
         if (isMobile()) {
             this.buttonBarResult.innerHTML = content;
         } else {
