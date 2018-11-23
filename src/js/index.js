@@ -29,7 +29,7 @@ class Places {
 
                 const onMarkerClick = popup ? marker => this._selectPlace(marker) : null;
 
-                this.mapHandler.setPlaces(places, this._getOffsetX(), 0, onMarkerClick, clusterer);
+                this.mapHandler.setPlaces(places ? places : [], this._getOffsetX(), 0, onMarkerClick, clusterer);
 
                 if (this.mapSearch) {
                     this.mapSearch.initSearch();

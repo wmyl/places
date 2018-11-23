@@ -154,12 +154,16 @@ Clusterer will put close places together in a cluster with a number showing how 
 |Option    | Type   | Required | Default                | Description
 | -------- | ------ | -------- | ---------------------- | ---------------------------------------------------------------------------
 |imagePath | string | No       |                        | See below.
-|textSize  | number | No       | 16                     | Textsize of the numbers in the clusters
-|textColor | string | No       | '#000'                 | Textcolor of the numbers in the clusters
+|textSize  | number | No       | `16`                   | Textsize of the numbers in the clusters
+|textColor | string | No       | `'#000'`               | Textcolor of the numbers in the clusters
 |sizes     | array  | No       | `[10, 10, 10, 10, 10]` | Array of pixel sizes for the different images
  
 The `imagePath` is similar to the `imagePath` of the main options but more strict. It requires that there are five different
 square PNG images, each ending with a number from 1 to 5. For example, if `imagePath` is `cluster_ball_`, the clusterer will expect
 that there are five images; `cluster_ball_1.png`, `cluster_ball_2.png`, `cluster_ball_3.png`, `cluster_ball_4.png` and 
 `cluster_ball_5.png`. This is unfortunately how the used library `js-marker-clusterer` works.
+
+## Examples
+
+### Bare minimum map
 
