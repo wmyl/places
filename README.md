@@ -85,6 +85,19 @@ You can override all styling on the map with your own css.
 |sidebar   | any     | No       |                                        | Whether to use sidebar or not and if so, specify options 
 |clusterer | any     | No       | `false`                                | Whether to use marker clustering or not and if so, specify clusterer options
 
+**Place object**
+
+|Property | Type   | Required | Default | Description
+| --------| ------ | -------- | ------- | -----------------------------------------------------------------------------------------------------
+|lat      | number | Yes      |         | The latitude of the place
+|lng      | number | Yes      |         | The longitude of the place
+|type     | string | No       |         | The type of the place. Not predefined, so it can be anything. Will only affect the icon of the place.
+|name     | string | Yes      |         | The name of the place. This must match the name in Google Maps for the search to work properly.
+|address  | string | Yes      |         | The address of the place. This must match the address in Google Maps for the search to work properly.
+|link     | string | No       |         | URL to the link for the place
+|phone    | string | No       |         | Phone number to the place
+|comment  | string | No       |         | Short description or comment of the place
+
 **Popup options**
 
 |Option       | Type    | Required | Default | Description                                                                  
@@ -92,4 +105,26 @@ You can override all styling on the map with your own css.
 |link         | string  | No       |         | URL for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.      
 |textLink     | string  | No       |         | Text for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.
 |noResultHTML | string  | No       |         | Custom HTML to override all other HTML in the popup, when place is not present.
+
+**Map styling**
+
+It is possible to either specify a custom array of Google Map styles, see more 
+here: https://mapstyle.withgoogle.com/
+
+It is also possible to specify one of predefined styles. Current valid stlyes are:
+* default
+* minimalistic
+
+**Image path**
+
+Path to the collection of images for the place icons. The images need to be in .png-format.
+The file ending (.png) will automatically be appended. If types are used, this will be appended to the image path as well.
+Note that if `imagePath` is not specified, Google Maps default pins will be used for the map 
+and no icons will be shown in sidebar.
+
+<!-- `${this.imagePath}${type ? type : ''}.png`, -->
+
+For example, if image path is `place_` and a place has type "hotel" the map will expect there is an image named 
+`place_hotel.png`. If the place has no type, simply `place_.png` will be expected.
+
 
