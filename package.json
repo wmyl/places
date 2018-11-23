@@ -1,6 +1,6 @@
 {
   "name": "@wmyl/places",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Interactive map based on Google Maps. Each place can have a popup with information, along with other features such as in-view list and clustering.",
   "main": "places.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "interactive",
     "javascript"
   ],
+  "style": "style.css",
   "author": "We Made You Look",
   "license": "ISC",
   "devDependencies": {
@@ -29,6 +30,8 @@
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
+    "file-loader": "^2.0.0",
+    "mini-css-extract-plugin": "^0.4.5",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
