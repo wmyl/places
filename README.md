@@ -165,7 +165,7 @@ that there are five images; `cluster_ball_1.png`, `cluster_ball_2.png`, `cluster
 
 ## Examples
 
-[example_minimum]: https://github.com/wmyl/places/raw/master/docs/screenshots/example_minimum.png "Minimum example"
+[example_minimum]: https://github.com/wmyl/places/raw/master/docs/screenshots/example_abs_minimum.png "Minimum example"
 
 ### Bare minimum map
 
