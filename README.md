@@ -165,5 +165,18 @@ that there are five images; `cluster_ball_1.png`, `cluster_ball_2.png`, `cluster
 
 ## Examples
 
+[example_minimum]: https://github.com/wmyl/places/raw/master/docs/screenshots/example_minimum.png "Minimum example"
+
 ### Bare minimum map
 
+This is the absolute minimum configuration - it will only show the default Google Maps.
+
+![alt text][example_minimum]
+
+```
+const options = {
+    tag: "https://maps.googleapis.com/maps/api/js?key=<YOUR_API_KEY>",
+};
+
+new Places(options);
+```
