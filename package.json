@@ -19,7 +19,6 @@
     "interactive",
     "javascript"
   ],
-  "style": "style.css",
   "author": "We Made You Look",
   "license": "ISC",
   "devDependencies": {
