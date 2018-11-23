@@ -10,6 +10,8 @@ class Places {
 
     constructor({tag, places, sidebar, popup, imagePath, clusterer, mapStyle, startPos, noGeoloc}) {
 
+        places = places ? places : {};
+
         if (document.querySelector('.' + SELECTOR_CLASS)) {
             this.mapHandler = new MapHandler(imagePath);
 
@@ -29,7 +31,7 @@ class Places {
 
                 const onMarkerClick = popup ? marker => this._selectPlace(marker) : null;
 
-                this.mapHandler.setPlaces(places ? places : [], this._getOffsetX(), 0, onMarkerClick, clusterer);
+                this.mapHandler.setPlaces(places, this._getOffsetX(), 0, onMarkerClick, clusterer);
 
                 if (this.mapSearch) {
                     this.mapSearch.initSearch();
