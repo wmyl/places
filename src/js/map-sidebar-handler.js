@@ -20,7 +20,7 @@ class MapSidebarHandler {
     populateSidebar(visibleMarkers, onclick, position) {
 
         this._sortMarkers(visibleMarkers, position).forEach(marker => {
-            const { name, type, } = marker.item;
+            const {name, type,} = marker.item;
 
             const item = document.createElement("BUTTON");
             item.classList.add(`${SELECTOR_CLASS}-sidebar-item`);
@@ -29,7 +29,7 @@ class MapSidebarHandler {
                 (this.imagePath ?
                         `<img class="${SELECTOR_CLASS}-sidebar-item__logo " src="${this.imagePath}${marker.item.type ? marker.item.type : ''}.png" alt="${type}"/>` :
                         `<div></div>`
-                 );
+                );
 
             this.resultWrapper.appendChild(item);
         });
@@ -46,13 +46,13 @@ class MapSidebarHandler {
         }
     }
 
-    static _buildSidebar ({ searchBar, footer }) {
+    static _buildSidebar({searchBar, footer, mobileListToggleIcon}) {
         let html = `<div class="${SELECTOR_CLASS}-sidebar">`;
 
         html += `<div class="${SELECTOR_CLASS}-sidebar__search">` +
             MapSearch.getHTML(searchBar) +
             '</div>';
-        html += MapSidebarHandler._getMobileBarHTML({searchBar})
+        html += MapSidebarHandler._getMobileBarHTML({searchBar, mobileListToggleIcon})
         html += `<div class="${SELECTOR_CLASS}-sidebar__wrapper">` +
             `<div class="${SELECTOR_CLASS}-sidebar__results"></div>` +
             `<span class="${SELECTOR_CLASS}-sidebar__number-places">0 platser</span>` +
@@ -73,7 +73,7 @@ class MapSidebarHandler {
 
         if (!footerOptions) return '<footer></footer>';
 
-        const { text, logo, logoLink, logoTitle, logoSVG } = footerOptions;
+        const {text, logo, logoLink, logoTitle, logoSVG} = footerOptions;
 
         if (text) {
             html += `<p class="${SELECTOR_CLASS}-footer__text">${text}</p>`;
@@ -90,8 +90,8 @@ class MapSidebarHandler {
 
             if (logoSVG) {
                 html += `<svg role="img" class="${SELECTOR_CLASS}-footer__image">` +
-                            `<use xlink:href="${logo}"/>` +
-                        '</svg>';
+                    `<use xlink:href="${logo}"/>` +
+                    '</svg>';
             } else {
                 html += `<img src="${logo}" class="${SELECTOR_CLASS}-footer__image"/>`
             }
@@ -117,8 +117,8 @@ class MapSidebarHandler {
             (sidebarOptions.searchBar && sidebarOptions.searchBar.searchIcon ? `<img src="${sidebarOptions.searchBar.searchIcon}" class="${SELECTOR_CLASS}-search-bar__icon" alt="sök">` : 'Sök') +
             '</button>' +
             `<button class="${SELECTOR_CLASS}-mobile-buttons-bar__btn ${SELECTOR_CLASS}-mobile-buttons-bar__btn--toggle">` +
-            (sidebarOptions.mobileListToggle ?
-                `<img src="${sidebarOptions.mobileListToggle}" class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">` :
+            (sidebarOptions.mobileListToggleIcon ?
+                `<img src="${sidebarOptions.mobileListToggleIcon}" class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">` :
                 `<span class="${SELECTOR_CLASS}-mobile-buttons-bar__icon ${SELECTOR_CLASS}-mobile-buttons-bar__icon--toggle">V</span>`) +
             '</button>' +
             '</div>';
@@ -126,7 +126,7 @@ class MapSidebarHandler {
 
     _sortMarkers(markers, position) {
         if (position) { // Sort by distance
-            return markers.sort((a,b) =>
+            return markers.sort((a, b) =>
                 MapSidebarHandler._getDistance(
                     position,
                     {
@@ -134,14 +134,14 @@ class MapSidebarHandler {
                         lng: parseFloat(a.item.lng)
                     }
                 ) < MapSidebarHandler._getDistance(
-                    position,
-                    {
-                        lat: parseFloat(b.item.lat),
-                        lng: parseFloat(b.item.lng)
-                    }
+                position,
+                {
+                    lat: parseFloat(b.item.lat),
+                    lng: parseFloat(b.item.lng)
+                }
                 ));
         } else { // Sort in alphabetic order
-            return markers.sort((a,b) => a.item.name < b.item.name ? -1 : 1);
+            return markers.sort((a, b) => a.item.name < b.item.name ? -1 : 1);
         }
     }
 

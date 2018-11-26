@@ -131,11 +131,11 @@ Options can be specified but for default usage `true` is enough. Will display a 
 Has a search bar at the top. On mobile, the sidebar will be on the lower half of the screen and is minimizable. 
 On mobile phones, the sidebar will be minimized when tapping a marker on the map.
 
-|Option           | Type    | Required | Default | Description
-| --------------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------                                                                  
-|searchBar        | object  | No       |         | Search bar options object. If the sidebar is enabled, the searchbar is always enabled too.
-|footer           | any     | No       | false   | Whether to use sidebar footer or not and if so, specify options.
-|mobileListToggle | string  | No       |         | Image to use for closing and opening sidebar on smaller devices
+|Option               | Type    | Required | Default | Description
+| ------------------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------                                                                  
+|searchBar            | object  | No       |         | Search bar options object. If the sidebar is enabled, the searchbar is always enabled too.
+|footer               | any     | No       | false   | Whether to use sidebar footer or not and if so, specify options.
+|mobileListToggleIcon | string  | No       |         | Image to use for closing and opening sidebar on smaller devices (preferably an arrow)
 
 **Search bar options**
 
