@@ -137,6 +137,12 @@ On mobile phones, the sidebar will be minimized when tapping a marker on the map
 |footer           | any     | No       | false   | Whether to use sidebar footer or not and if so, specify options.
 |mobileListToggle | string  | No       |         | Image to use for closing and opening sidebar on smaller devices
 
+**Search bar options**
+|Option      | Type   | Required | Default | Description
+| ---------- | ------ | -------- | ------- | ------------------------------------------------------------
+|searchIcon  | string | No       |         | Image to use as the search icon (typically magnifying glass)
+|placeholder | string | No       |         | Placeholder for search bar
+
 **Footer options**
 
 |Option    | Type   | Required | Default | Description 
