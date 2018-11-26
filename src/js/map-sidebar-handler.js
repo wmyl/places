@@ -90,11 +90,11 @@ class MapSidebarHandler {
 
             if (logoSVG) {
                 html += `<svg role="img" class="${SELECTOR_CLASS}-footer__image">` +
-                            `<use xlink:href="${LOGO}"/>` +
+                            `<use xlink:href="${logo}"/>` +
                         '</svg>';
+            } else {
+                html += `<img src="${logo}" class="${SELECTOR_CLASS}-footer__image"/>`
             }
-
-            html += `<img src="${logo}" class="${SELECTOR_CLASS}-footer__image"/>`
 
             if (logoLink) {
                 html += '</a>';
