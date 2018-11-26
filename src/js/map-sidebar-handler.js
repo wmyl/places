@@ -73,7 +73,7 @@ class MapSidebarHandler {
 
         if (!footerOptions) return '<footer></footer>';
 
-        const { text, logo, logoLink, logoTitle } = footerOptions;
+        const { text, logo, logoLink, logoTitle, logoSVG } = footerOptions;
 
         if (text) {
             html += `<p class="${SELECTOR_CLASS}-footer__text">${text}</p>`;
@@ -85,6 +85,13 @@ class MapSidebarHandler {
                     `href="${logoLink}" title="${logoTitle ? logoTitle : 'Footer Logo'}" target="_blank" rel="noopener noreferrer nofollow">`
             } else {
                 html += `<div class=${SELECTOR_CLASS}-footer__logo>`
+            }
+
+
+            if (logoSVG) {
+                html += `<svg role="img" class="${SELECTOR_CLASS}-footer__image">` +
+                            `<use xlink:href="${LOGO}"/>` +
+                        '</svg>';
             }
 
             html += `<img src="${logo}" class="${SELECTOR_CLASS}-footer__image"/>`
