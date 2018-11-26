@@ -138,6 +138,7 @@ On mobile phones, the sidebar will be minimized when tapping a marker on the map
 |mobileListToggle | string  | No       |         | Image to use for closing and opening sidebar on smaller devices
 
 **Search bar options**
+
 |Option      | Type   | Required | Default | Description
 | ---------- | ------ | -------- | ------- | ------------------------------------------------------------
 |searchIcon  | string | No       |         | Image to use as the search icon (typically magnifying glass)
