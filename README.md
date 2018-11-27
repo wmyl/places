@@ -100,11 +100,12 @@ You can override all styling on the map with your own css.
 
 **Popup options**
 
-|Option       | Type    | Required | Default | Description                                                                  
-| ----------- | ------- | -------- | ------- | -------------------------------------------------------------------------------------
-|link         | string  | No       |         | URL for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.      
-|textLink     | string  | No       |         | Text for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.
-|noResultHTML | string  | No       |         | Custom HTML to override all other HTML in the popup, when place is not present.
+|Option       | Type    | Required | Default                                              | Description                                                                  
+| ----------- | ------- | -------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------
+|noResultText | string  | No       | Vi hittar tyvärr inte några resultat på <PLACE_NAME> | Text shown when to result is found for a location. Use `<PLACE_NAME>` to insert the name of the place.
+|link         | string  | No       |                                                      | URL for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.      
+|textLink     | string  | No       |                                                      | Text for link shown when a place is searched for but not present, such as "Contact Us". Both link and link text is required.
+|noResultHTML | string  | No       |                                                      | Custom HTML to override all other HTML in the popup, when place is not present.
 
 **Map styling**
 

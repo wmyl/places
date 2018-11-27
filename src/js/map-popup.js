@@ -48,16 +48,22 @@ class MapPopup {
     }
 
     createAndShowPromptPopup(place) {
-        const { link, textLink, noResultHTML, } = this.popupOptions;
+        const { link, textLink, noResultHTML, noResultText } = this.popupOptions;
 
         if (noResultHTML) {
             this.popupContainer.innerHTML = `<div>${noResultHTML}</div>`;
         } else {
             this.popupContainer.innerHTML = '<div>' +
-                    (place.name ? `<h2 class="${SELECTOR_CLASS}-popup__title">Tyvärr!</h2>` : '') +
-                    `<p>Vi hittar tyvärr inte några resultat på <i>"${place.name}"</i>.</p>` +
-                    (link && textLink ? `<p><a href="${link}">${textLink}</a></p>` : '') +
-                '</div>';
+                    `<h2 class="${SELECTOR_CLASS}-popup__title">Tyvärr!</h2>`;
+
+            if (noResultText) {
+                this.popupContainer.innerHTML += `<p>${noResultText.replace('<PLACE_NAME>', place.name)}</p>`;
+            } else {
+                this.popupContainer.innerHTML += `<p>Vi hittar tyvärr inte några resultat på <i>"${place.name}"</i>.</p>`;
+            }
+
+            this.popupContainer.innerHTML += (link && textLink ? `<p><a href="${link}">${textLink}</a></p>` : '') +
+                                        '</div>';
         }
         this.showPopup();
         return this.popupContainer;
