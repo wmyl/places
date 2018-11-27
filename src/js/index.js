@@ -11,6 +11,7 @@ class Places {
     constructor({tag, places, sidebar, popup, imagePath, clusterer, mapStyle, startPos, noGeoloc}) {
 
         places = places ? places : [];
+        this.places = places;
 
         if (document.querySelector('.' + SELECTOR_CLASS)) {
             this.mapHandler = new MapHandler(imagePath);
