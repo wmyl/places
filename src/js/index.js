@@ -93,10 +93,10 @@ class Places {
         this.mapHandler.goToSearchedPlace(searchedPlace).then(googlePlace => {
 
             // See if there is a place matching the searchResult
-            const maybeMatchingPlace = this.places.find(place =>
-                Places._addressesEqual(googlePlace.formatted_address, place.address) &&
-                Places._namesEqual(googlePlace.name, place.name)
-            );
+            const maybeMatchingPlace = this.mapHandler.markers.filter(marker =>
+                Places._addressesEqual(googlePlace.formatted_address, marker.item.address) &&
+                Places._namesEqual(googlePlace.name, marker.item.name)
+            )[0];
 
             // We have a match!
             if (maybeMatchingPlace) {
