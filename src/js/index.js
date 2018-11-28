@@ -8,16 +8,16 @@ import '../scss/style.scss';
 
 class Places {
 
-    constructor({tag, places, sidebar, popup, imagePath, clusterer, mapStyle, startPos, noGeoloc}) {
+    constructor({tag, places, sidebar, popup, pinImagePath, iconImagePath, clusterer, mapStyle, startPos, noGeoloc}) {
 
         places = places ? places : [];
         this.places = places;
 
         if (document.querySelector('.' + SELECTOR_CLASS)) {
-            this.mapHandler = new MapHandler(imagePath);
+            this.mapHandler = new MapHandler(pinImagePath);
 
             if (sidebar) {
-                this.sidebarHandler = new MapSidebarHandler(sidebar, imagePath);
+                this.sidebarHandler = new MapSidebarHandler(sidebar, iconImagePath ? iconImagePath : pinImagePath);
                 this.mapSearch = new MapSearch(this._goToSearchedPlace.bind(this));
             }
 
