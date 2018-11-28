@@ -19,6 +19,8 @@ class MapSidebarHandler {
 
     populateSidebar(visibleMarkers, onclick, position) {
 
+        this.resultWrapper.innerHTML = '';
+
         this._sortMarkers(visibleMarkers, position).forEach(marker => {
             const {name, type,} = marker.item;
 
