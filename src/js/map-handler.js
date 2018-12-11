@@ -165,7 +165,7 @@ class MapHandler {
     }
 
     static _inViewPort(mapView, {lng, lat}) {
-        return lng < mapView.j.l && lng > mapView.j.j && lat < mapView.l.l && lat > mapView.l.j;
+        return lng < mapView.ea.l && lng > mapView.ea.j && lat < mapView.la.l && lat > mapView.la.j;
     }
 
     _initGeoloc() {
