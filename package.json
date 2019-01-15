@@ -1,6 +1,6 @@
 {
   "name": "@wmyl/places",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Interactive map based on Google Maps. Each place can have a popup with information, along with other features such as in-view list and clustering.",
   "main": "places.js",
   "scripts": {
