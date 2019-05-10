@@ -165,7 +165,8 @@ class MapHandler {
     }
 
     static _inViewPort(mapView, {lng, lat}) {
-        return lng < mapView.ea.l && lng > mapView.ea.j && lat < mapView.la.l && lat > mapView.la.j;
+        console.log(mapView);
+        return lng < mapView.ia.l && lng > mapView.ia.j && lat < mapView.na.l && lat > mapView.na.j;
     }
 
     _initGeoloc() {
