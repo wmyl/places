@@ -23,7 +23,7 @@ Add container such as `div` with class name `places` in HTML
 `<div class="places"></div>`
 
 **Step 3 - Init JavaScript**
-```
+``` 
 import Places from '@wmyl/places';
 
 ...
